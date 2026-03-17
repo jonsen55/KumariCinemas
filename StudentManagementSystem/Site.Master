@@ -1,0 +1,280 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="StudentManagementSystem.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Kumari Cinemas</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ── Reset ── */
+        html, body {
+            background-color: #F5F4F0 !important;
+            color: #1A1A1A !important;
+            font-family: 'DM Sans', sans-serif !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .container, .container-fluid, .body-content {
+            background: transparent !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        form {
+            background-color: #F5F4F0 !important;
+            min-height: 100vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .navbar { display: none !important; }
+        hr { border-color: #E5E2DA !important; margin: 2rem 0 !important; }
+
+        /* ── GridView ── */
+        .grid-table { width: 100%; border-collapse: collapse; }
+        .grid-table th {
+            background: #1A1A1A !important;
+            color: #F59E0B !important;
+            font-size: .70rem !important;
+            font-weight: 600 !important;
+            letter-spacing: .09em !important;
+            text-transform: uppercase !important;
+            padding: .85rem 1.1rem !important;
+            text-align: left !important;
+            border: none !important;
+        }
+        .grid-table td {
+            padding: .75rem 1.1rem !important;
+            font-size: .875rem !important;
+            color: #374151 !important;
+            border-bottom: 1px solid #F0EDE6 !important;
+            border-top: none !important;
+            background-color: #fff !important;
+            vertical-align: middle !important;
+        }
+        .grid-table tr:last-child td { border-bottom: none !important; }
+        .grid-table tr:hover td { background-color: #FDF9F3 !important; }
+
+        /* Edit / Delete */
+        .grid-table td a {
+            font-size: .75rem !important;
+            font-weight: 600 !important;
+            padding: .25rem .7rem !important;
+            border-radius: .375rem !important;
+            text-decoration: none !important;
+            display: inline-block !important;
+            margin-right: .25rem !important;
+            transition: all .15s !important;
+        }
+        .grid-table td:first-child a:first-child {
+            background: #FFF3E0 !important;
+            color: #C2410C !important;
+            border: 1px solid #FDBA74 !important;
+        }
+        .grid-table td:first-child a:first-child:hover {
+            background: #FED7AA !important;
+        }
+        .grid-table td:first-child a:last-child {
+            background: #FEF2F2 !important;
+            color: #DC2626 !important;
+            border: 1px solid #FCA5A5 !important;
+        }
+        .grid-table td:first-child a:last-child:hover {
+            background: #FEE2E2 !important;
+        }
+
+        /* Inline edit inputs */
+        .grid-table input[type=text],
+        .grid-table input[type=date] {
+            background: #fff !important;
+            border: 1px solid #D1C9BC !important;
+            color: #1A1A1A !important;
+            border-radius: .375rem !important;
+            padding: .25rem .5rem !important;
+            font-size: .85rem !important;
+            width: 100% !important;
+        }
+
+        /* Pager */
+        .grid-table td[colspan] {
+            text-align: center !important;
+            padding: .65rem !important;
+            background: #FAFAF8 !important;
+            border-top: 1px solid #F0EDE6 !important;
+        }
+        .grid-table td[colspan] a,
+        .grid-table td[colspan] span {
+            margin: 0 .2rem !important;
+            padding: .25rem .65rem !important;
+            background: #fff !important;
+            border: 1px solid #E5E2DA !important;
+            border-radius: .375rem !important;
+            color: #6B7280 !important;
+            font-size: .8rem !important;
+            text-decoration: none !important;
+            display: inline-block !important;
+        }
+        .grid-table td[colspan] span {
+            background: #C2410C !important;
+            color: #fff !important;
+            border-color: #C2410C !important;
+        }
+
+        /* ── Form inputs ── */
+        .form-input {
+            width: 100% !important;
+            background: #fff !important;
+            border: 1px solid #D1C9BC !important;
+            color: #1A1A1A !important;
+            border-radius: .5rem !important;
+            padding: .6rem .9rem !important;
+            font-size: .9rem !important;
+            font-family: 'DM Sans', sans-serif !important;
+            box-sizing: border-box !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            transition: border-color .2s, box-shadow .2s !important;
+        }
+        .form-input:focus {
+            outline: none !important;
+            border-color: #C2410C !important;
+            box-shadow: 0 0 0 3px rgba(194,65,12,0.1) !important;
+        }
+
+        /* ── Save button ── */
+        .btn-save {
+            background: linear-gradient(135deg, #EA580C, #C2410C) !important;
+            color: #fff !important;
+            font-weight: 600 !important;
+            font-size: .9rem !important;
+            padding: .65rem 1.75rem !important;
+            border: none !important;
+            border-radius: .5rem !important;
+            cursor: pointer !important;
+            letter-spacing: .04em !important;
+            font-family: 'DM Sans', sans-serif !important;
+            box-shadow: 0 2px 8px rgba(194,65,12,0.3) !important;
+            transition: opacity .2s, transform .1s !important;
+        }
+        .btn-save:hover {
+            opacity: .92 !important;
+            transform: translateY(-1px) !important;
+        }
+
+        /* ── Report selects ── */
+        .report-select select {
+            background: #fff !important;
+            border: 1px solid #D1C9BC !important;
+            color: #1A1A1A !important;
+            border-radius: .5rem !important;
+            padding: .6rem 2.5rem .6rem .9rem !important;
+            font-size: .9rem !important;
+            font-family: 'DM Sans', sans-serif !important;
+            min-width: 240px !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23C2410C' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right .85rem center !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+            cursor: pointer !important;
+        }
+        .report-select select:focus {
+            outline: none !important;
+            border-color: #C2410C !important;
+            box-shadow: 0 0 0 3px rgba(194,65,12,0.1) !important;
+        }
+
+        /* ── Nav pills ── */
+        .nav-pill {
+            color: #D1D5DB !important;
+            font-size: .82rem !important;
+            font-weight: 500 !important;
+            padding: .35rem .8rem !important;
+            border-radius: 9999px !important;
+            text-decoration: none !important;
+            white-space: nowrap !important;
+            font-family: 'DM Sans', sans-serif !important;
+            transition: background .15s, color .15s !important;
+        }
+        .nav-pill:hover {
+            background: rgba(255,255,255,0.1) !important;
+            color: #fff !important;
+        }
+
+        footer p { margin: 0 !important; }
+    </style>
+</head>
+<body>
+    <form runat="server" style="background:#F5F4F0; min-height:100vh; display:flex; flex-direction:column;">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+            </Scripts>
+        </asp:ScriptManager>
+
+        <!-- ── Navbar ── -->
+        <nav style="background:#111111; position:sticky; top:0; z-index:999; border-bottom:3px solid #EA580C;">
+            <div style="max-width:1280px; margin:0 auto; padding:.8rem 1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.75rem;">
+                <a runat="server" href="~/" style="text-decoration:none;">
+                    <span style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; letter-spacing:.02em;">
+                        <span style="color:#fff;">Kumari</span>&nbsp;<span style="color:#EA580C;">Cinemas</span>
+                    </span>
+                </a>
+                <div style="display:flex; flex-wrap:wrap; gap:.2rem; align-items:center;">
+                    <a runat="server" href="~/"                              class="nav-pill">Home</a>
+                    <a runat="server" href="~/Movies"                        class="nav-pill">Movies</a>
+                    <a runat="server" href="~/Users"                         class="nav-pill">Users</a>
+                    <a runat="server" href="~/TheaterCityHall"               class="nav-pill">Halls</a>
+                    <a runat="server" href="~/Shows"                         class="nav-pill">Showtimes</a>
+                    <a runat="server" href="~/Tickets"                       class="nav-pill">Tickets</a>
+                    <a runat="server" href="~/UserTicket"                    class="nav-pill">User Tickets</a>
+                    <a runat="server" href="~/TheaterCityHallMovie"          class="nav-pill">Hall Movies</a>
+                    <a runat="server" href="~/MovieTheaterCityHallOccupancy" class="nav-pill">Occupancy</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ── Content ── -->
+        <main style="flex:1; max-width:1280px; margin:0 auto; width:100%; padding:2.5rem 1.5rem;">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </main>
+
+        <!-- ── Footer ── -->
+        <footer style="background:#111111; border-top:3px solid #EA580C; padding:1.25rem; text-align:center;">
+            <p style="font-size:.75rem; color:#9CA3AF; letter-spacing:.06em; font-family:'DM Sans',sans-serif; margin:0;">
+                &copy; <%: DateTime.Now.Year %> &nbsp;&#9670;&nbsp; KUMARI CINEMAS &nbsp;&#9670;&nbsp; ALL RIGHTS RESERVED
+            </p>
+        </footer>
+
+    </form>
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/Scripts/bootstrap.js") %>
+    </asp:PlaceHolder>
+</body>
+</html>
